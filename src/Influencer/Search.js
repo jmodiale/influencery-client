@@ -5,7 +5,7 @@ import styled from "styled-components";
 const InfluencerSearch = () => {
   const [influencers, setInfluencers] = useState(null);
   const [searchString, setSearchString] = useState("");
-  // const [platformString, setPlatformString] = useState("all");
+  const [platformString, setPlatformString] = useState("all");
 
   useEffect(() => {
     getInfluencers();
@@ -21,6 +21,25 @@ const InfluencerSearch = () => {
       .then((response) => response.json())
       .then((data) => setInfluencers(data));
 
+  const filterInfluencers = () => {
+    const str = searchString.toLowerCase().trim();
+    const arr = [];
+    influencers?.forEach((inf) => {
+      if (
+        (str === "" ||
+          inf.handle.toLowerCase().includes(str) ||
+          inf.platform.name.toLowerCase().includes(str)) &&
+        (platformString === "all" || inf.platform.name === platformString)
+      ) {
+        arr.push(
+          <InfluencerCard influencer={inf} key={"inf_card_" + inf.id} />
+        );
+      }
+    });
+    return arr;
+  };
+
+
   return (
     <div>
       <SearchInputContainer>
@@ -30,7 +49,7 @@ const InfluencerSearch = () => {
           value={searchString}
           onChange={(e) => setSearchString(e.target.value)}
         />
-        {/* <SelectInput
+        <SelectInput
           value={platformString}
           onChange={(e) => setPlatformString(e.target.value)}
           name="platforms"
@@ -42,14 +61,12 @@ const InfluencerSearch = () => {
           <option value="facebook">Facebook</option>
           <option value="tiktok">Tik-Tok</option>
           <option value="youtube">Youtube</option>
-        </SelectInput> */}
+        </SelectInput>
       </SearchInputContainer>
       <SearchContainer>
         {!influencers && <Loader />}
         <div>
-          {influencers?.map((inf, i) => (
-            <InfluencerCard influencer={inf} key={"inf_card_" + i} />
-          ))}
+          {filterInfluencers()}
         </div>
       </SearchContainer>
     </div>
