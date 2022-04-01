@@ -28,7 +28,8 @@ const InfluencerSearch = () => {
       if (
         (str === "" ||
           inf.handle.toLowerCase().includes(str) ||
-          inf.platform.name.toLowerCase().includes(str)) &&
+          inf.platform.name.toLowerCase().includes(str))
+          &&
         (platformString === "all" || inf.platform.name === platformString)
       ) {
         arr.push(
